@@ -12,8 +12,8 @@ import logging
 
 from llama_index.core import Document
 from llama_index.core.storage.docstore import SimpleDocumentStore
-from llama_index.storage.docstore.mongodb import MongoDocumentStore
-from llama_index.storage.docstore.redis import RedisDocumentStore
+# from llama_index.storage.docstore.mongodb import MongoDocumentStore
+# from llama_index.storage.docstore.redis import RedisDocumentStore
 
 logger = logging.getLogger(__name__)
 

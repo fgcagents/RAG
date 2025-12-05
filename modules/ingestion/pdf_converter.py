@@ -5,7 +5,7 @@ Conversió especialitzada de PDFs a Markdown
 """
 
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import List, Optional, Dict, Any
 import pymupdf4llm
 import logging
 

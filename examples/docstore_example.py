@@ -3,7 +3,13 @@
 Exemple d'ús del DocumentStore per persistència
 """
 
+import sys
 from pathlib import Path
+
+# Afegir el directori arrel al PYTHONPATH
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 from modules.ingestion.docstore import (
     DocumentStoreManager,
     process_and_store_documents

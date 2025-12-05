@@ -1,0 +1,51 @@
+{
+  "aac868bf-01d0-4b83-b6b5-06cdc0a7b77d": {
+    "filename": "doc1.txt",
+    "category": "test",
+    "stored_at": "2025-12-05T18:07:21.759423"
+  },
+  "0a493689-fc2b-4e9e-862a-7fb0abdf83d8": {
+    "filename": "doc2.txt",
+    "category": "test",
+    "stored_at": "2025-12-05T18:07:21.759717"
+  },
+  "a9dfb8e3-86d4-416c-b122-5772050def01": {
+    "filename": "security.pdf",
+    "department": "IT",
+    "category": "security",
+    "language": "ca",
+    "stored_at": "2025-12-05T18:07:21.762425"
+  },
+  "d687591b-2281-41dd-9290-6dd67f1f367a": {
+    "filename": "contracts.pdf",
+    "department": "Legal",
+    "category": "contracts",
+    "language": "ca",
+    "stored_at": "2025-12-05T18:07:21.762567"
+  },
+  "3bc3507c-0a3f-49b6-85a9-6b7ba48222e9": {
+    "filename": "manual.pdf",
+    "department": "IT",
+    "category": "manual",
+    "language": "es",
+    "stored_at": "2025-12-05T18:07:21.762676"
+  },
+  "doc_updateable": {
+    "filename": "doc.txt",
+    "version": 2,
+    "stored_at": "2025-12-05T18:07:21.764884",
+    "updated_at": "2025-12-05T18:07:21.764892"
+  },
+  "3f14baa4-ba6e-471c-b120-e009423031c2": {
+    "id": 0,
+    "stored_at": "2025-12-05T18:07:21.769281"
+  },
+  "97af39ab-2b14-4dbd-9d16-a26343188784": {
+    "id": 1,
+    "stored_at": "2025-12-05T18:07:21.769416"
+  },
+  "9d087c9e-fcb4-491a-b79c-1bf28066747c": {
+    "id": 2,
+    "stored_at": "2025-12-05T18:07:21.769520"
+  }
+}

@@ -7,6 +7,7 @@ Script per configurar i provar el Mòdul 1: Data Ingestion Pipeline
 import sys
 from pathlib import Path
 import logging
+import os
 
 # Afegir el directori arrel al path
 sys.path.insert(0, str(Path(__file__).parent.parent))
@@ -19,6 +20,12 @@ from modules.ingestion import (
     MetadataExtractor,
     DocumentValidator
 )
+
+# Crear directori de logs si cal
+if config.LOG_FILE:
+    log_dir = os.path.dirname(config.LOG_FILE)
+    if log_dir and not os.path.exists(log_dir):
+        os.makedirs(log_dir, exist_ok=True)
 
 # Configurar logging
 logging.basicConfig(
