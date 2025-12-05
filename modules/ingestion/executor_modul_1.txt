@@ -1,0 +1,10 @@
+## Instal·lar dependències:
+pip install -r requirements_module1.txt
+
+## Executar setup:
+python scripts/setup_module1.py
+
+##Afegir els teus PDFs a data/raw/
+
+## Provar exemples:
+python examples/module1_example.py

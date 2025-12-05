@@ -1,0 +1,48 @@
+# requirements_module1.txt
+# =============================================================================
+# Mòdul 1: Data Ingestion Pipeline - Dependències
+# =============================================================================
+
+# Core LlamaIndex
+llama-index>=0.10.0
+llama-index-core>=0.10.0
+
+# PDF Processing
+pymupdf4llm>=0.0.5
+PyMuPDF>=1.23.0
+
+# Document Processing (opcional però recomanat)
+python-docx>=1.0.0
+python-pptx>=0.6.0
+openpyxl>=3.1.0
+
+# Alternative PDF parsers (opcional - comentar si no es necessiten)
+# docling>=0.1.0  # IBM Docling
+# unstructured>=0.11.0  # Unstructured.io
+# marker-pdf>=0.2.0  # Marker
+
+# Text Processing
+chardet>=5.2.0
+langdetect>=1.0.9
+
+# Configuration
+pydantic>=2.0.0
+pydantic-settings>=2.0.0
+python-dotenv>=1.0.0
+
+# Utilities
+pathlib>=1.0.0  # Normalment inclòs en Python 3.4+
+typing-extensions>=4.8.0
+
+# Logging i Monitoring
+structlog>=23.0.0
+
+# Testing (opcional)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-asyncio>=0.21.0
+
+# =============================================================================
+# INSTAL·LACIÓ:
+# pip install -r requirements_module1.txt
+# =============================================================================
