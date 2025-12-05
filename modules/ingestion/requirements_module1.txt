@@ -10,6 +10,7 @@ llama-index-core>=0.10.0
 # PDF Processing
 pymupdf4llm>=0.0.5
 PyMuPDF>=1.23.0
+pymupdf_layout>=0.0.1
 
 # Document Processing (opcional però recomanat)
 python-docx>=1.0.0

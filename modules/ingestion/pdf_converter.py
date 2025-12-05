@@ -7,6 +7,14 @@ Conversió especialitzada de PDFs a Markdown
 from pathlib import Path
 from typing import List, Optional, Dict, Any
 import pymupdf4llm
+
+# Optional, improved layout analysis
+try:
+    import pymupdf_layout  # type: ignore
+    _PML_AVAILABLE = True
+except Exception:
+    pymupdf_layout = None
+    _PML_AVAILABLE = False
 import logging
 
 logger = logging.getLogger(__name__)
@@ -70,8 +78,53 @@ class PDFToMarkdownConverter:
             if pages:
                 kwargs['pages'] = pages
             
-            # Convertir amb PyMuPDF4LLM
-            markdown_text = pymupdf4llm.to_markdown(str(path), **kwargs)
+            markdown_text = None
+
+            # Preferir pymupdf_layout si està disponible (millor anàlisi de layout)
+            if _PML_AVAILABLE:
+                try:
+                    logger.info("Usant pymupdf_layout per anàlisi de layout: %s", pdf_path)
+
+                    # Provar diferents punts d'entrada coneguts de la llibreria
+                    if hasattr(pymupdf_layout, 'to_markdown'):
+                        # API simple similar a pymupdf4llm
+                        markdown_text = pymupdf_layout.to_markdown(str(path), **kwargs)
+
+                    elif hasattr(pymupdf_layout, 'extract_layout'):
+                        # pot retornar un objecte o text, fer heurístiques
+                        layout_obj = pymupdf_layout.extract_layout(str(path))
+                        if isinstance(layout_obj, str):
+                            markdown_text = layout_obj
+                        elif hasattr(layout_obj, 'to_markdown'):
+                            markdown_text = layout_obj.to_markdown()
+                        else:
+                            # intentar concatenar blocs textuals
+                            blocks = getattr(layout_obj, 'blocks', None)
+                            if blocks:
+                                parts = []
+                                for b in blocks:
+                                    text = getattr(b, 'text', None) or str(b)
+                                    parts.append(text.strip())
+                                markdown_text = "\n\n".join([p for p in parts if p])
+
+                    elif hasattr(pymupdf_layout, 'LayoutAnalyzer'):
+                        analyzer = pymupdf_layout.LayoutAnalyzer(str(path))
+                        if hasattr(analyzer, 'to_markdown'):
+                            markdown_text = analyzer.to_markdown()
+                        elif hasattr(analyzer, 'get_text'):
+                            markdown_text = analyzer.get_text()
+
+                    # Si no hem obtingut markdown_text, fallar per usar fallback
+                    if not markdown_text:
+                        raise RuntimeError('No s\'ha pogut obtenir markdown via pymupdf_layout')
+
+                except Exception as e:
+                    logger.warning("pymupdf_layout ha fallat (%s). Torno a pymupdf4llm.", e)
+                    markdown_text = None
+
+            # Fallback a pymupdf4llm
+            if not markdown_text:
+                markdown_text = pymupdf4llm.to_markdown(str(path), **kwargs)
             
             logger.info(f"PDF convertit: {len(markdown_text)} caràcters")
             

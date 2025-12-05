@@ -7,6 +7,7 @@ Validació de qualitat dels documents
 from typing import Dict, List, Any, Optional
 from llama_index.core.schema import Document as LlamaDocument
 import logging
+import hashlib
 
 logger = logging.getLogger(__name__)
 
@@ -58,6 +59,13 @@ class DocumentValidator:
         """
         errors = []
         
+        # Normalitzar metadata (afegir alternatives com filename, file_hash)
+        try:
+            self._normalize_metadata(document)
+        except Exception:
+            # no fallar aquí, seguir amb la validació i recollir errors
+            logger.debug("No s'ha pogut normalitzar metadata")
+
         # Validar text
         text_errors = self._validate_text(document.text)
         errors.extend(text_errors)
@@ -167,6 +175,10 @@ class DocumentValidator:
     def _check_duplicate(self, document: LlamaDocument) -> Optional[str]:
         """Verifica si el document és un duplicat"""
         file_hash = document.metadata.get('file_hash')
+
+        if not file_hash:
+            # intentar altres claus possibles
+            file_hash = document.metadata.get('hash') or document.metadata.get('sha256')
         
         if not file_hash:
             return "Hash no disponible per verificar duplicats"
@@ -176,6 +188,35 @@ class DocumentValidator:
         
         self.seen_hashes.add(file_hash)
         return None
+
+    def _normalize_metadata(self, document: LlamaDocument) -> None:
+        """Omple camps derivats a partir de variants de metadata.
+
+        - Estableix `filename` a partir de `source_file`, `source`, `source_title` o `title` si cal.
+        - Calcula `file_hash` com a SHA256 del text si no existeix.
+        """
+        md = document.metadata or {}
+
+        # Calcular filename a partir d'aliases
+        if not md.get('filename'):
+            for key in ('source_title', 'title'):
+                val = md.get(key)
+                if val:
+                    md['filename'] = val
+                    break
+
+        # Calcular hash a partir del text si no existeix
+        if not md.get('file_hash'):
+            try:
+                text = document.text or ''
+                h = hashlib.sha256(text.encode('utf-8')).hexdigest()
+                md['file_hash'] = h
+            except Exception:
+                # no fallar si no es pot codificar
+                pass
+
+        # Assignar de nou (LlamaDocument.metadata normalment és dict mutable)
+        document.metadata = md
     
     def reset_duplicates_check(self):
         """Reinicia el control de duplicats"""
