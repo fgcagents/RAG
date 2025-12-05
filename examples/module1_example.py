@@ -3,7 +3,14 @@
 Exemple complet d'ús del Mòdul 1: Data Ingestion Pipeline
 """
 
+from typing import Optional
+import sys
 from pathlib import Path
+
+# Afegir el directori arrel al PYTHONPATH
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
 from modules.ingestion import (
     DocumentLoader,
     PDFToMarkdownConverter,
@@ -19,6 +26,21 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
+def is_valid_pdf(path: str) -> bool:
+    """Quick check whether a file looks like a PDF by verifying the header.
+
+    This avoids calling PyMuPDF on obviously invalid files (plain text,
+    empty files, etc.) and gives friendlier messages in the examples.
+    """
+    try:
+        p = Path(path)
+        if not p.exists() or not p.is_file():
+            return False
+        with p.open("rb") as fh:
+            header = fh.read(4)
+        return header == b"%PDF"
+    except Exception:
+        return False
 logger = logging.getLogger(__name__)
 
 
@@ -36,18 +58,29 @@ def example_1_basic_pdf_conversion():
         image_path="data/images",
         dpi=150
     )
-    
+
     # Convertir un PDF individual
     pdf_path = "data/raw/document_exemple.pdf"
-    
+
+    # Comprovacions prèvies per evitar errors de format al obrir amb PyMuPDF
+    if not Path(pdf_path).exists():
+        print(f"⚠️  Fitxer no trobat: {pdf_path}")
+        print("   Crea aquest fitxer o canvia el path per provar")
+        return
+
+    if not is_valid_pdf(pdf_path):
+        print(f"⚠️  Fitxer trobat però no és un PDF vàlid o està corromput: {pdf_path}")
+        print("   Assegura't que és un PDF vàlid (comença amb '%PDF')")
+        return
+
     try:
         markdown_text = converter.convert_file(pdf_path)
         print(f"✓ PDF convertit: {len(markdown_text)} caràcters")
         print(f"Previsualització:\n{markdown_text[:500]}...")
-        
-    except FileNotFoundError:
-        print(f"⚠️  Fitxer no trobat: {pdf_path}")
-        print("   Crea aquest fitxer o canvia el path per provar")
+
+    except Exception as e:
+        print(f"⚠️  Error convertint '{pdf_path}': {e}")
+        print("   Pot ser que el PDF estigui corromput o que falti una dependència.")
 
 
 def example_2_batch_conversion():
@@ -127,15 +160,20 @@ def example_3_complete_pipeline():
             
             # Pas 1: Convertir PDF a Markdown
             print("  1. Convertint PDF → Markdown...")
+            if not is_valid_pdf(pdf_file):
+                print(f"  ⚠️  Saltant fitxer no vàlid o corromput: {pdf_file.name}")
+                continue
+
             markdown_text = converter.convert_file(str(pdf_file))
-            
+
             # Pas 2: Netejar text
             print("  2. Netejant text...")
             clean_text = cleaner.clean(markdown_text)
-            
+
             # Pas 3: Extreure metadata
             print("  3. Extraient metadata...")
             file_metadata = metadata_extractor.extract_from_file(str(pdf_file))
+
             text_metadata = metadata_extractor.extract_from_text(clean_text)
             metadata = {**file_metadata, **text_metadata}
             
@@ -240,8 +278,8 @@ def example_5_metadata_enrichment():
         }
     )
     
-    # Simular un document
-    test_file = "data/raw/exemple.pdf"
+    # Simular un document (usar .txt per evitar crear PDFs invàlids)
+    test_file = "data/raw/exemple.txt"
     
     # Crear fitxer de prova si no existeix
     Path("data/raw").mkdir(parents=True, exist_ok=True)
