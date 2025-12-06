@@ -1,0 +1,207 @@
+# =============================================================================
+# .gitignore - Sistema RAG Empresarial
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# CONFIGURACIÓN Y SECRETOS
+# -----------------------------------------------------------------------------
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+secrets/
+credentials/
+
+# -----------------------------------------------------------------------------
+# DATOS Y DOCUMENTOS
+# -----------------------------------------------------------------------------
+data/raw/*
+data/processed/*
+data/images/*
+data/docstore/*
+data/vector_stores/*
+data/embeddings/*
+data/cache/*
+
+# Excepciones: mantener estructura de directorios
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+!data/images/.gitkeep
+!data/docstore/.gitkeep
+
+# -----------------------------------------------------------------------------
+# LOGS Y TEMPORALES
+# -----------------------------------------------------------------------------
+logs/
+*.log
+*.log.*
+tmp/
+temp/
+cache/
+
+# -----------------------------------------------------------------------------
+# PYTHON
+# -----------------------------------------------------------------------------
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+env/
+ENV/
+.venv
+.pyenv
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+coverage.xml
+*.cover
+
+# -----------------------------------------------------------------------------
+# JUPYTER NOTEBOOKS
+# -----------------------------------------------------------------------------
+.ipynb_checkpoints
+*.ipynb
+
+# -----------------------------------------------------------------------------
+# IDEs Y EDITORES
+# -----------------------------------------------------------------------------
+# VSCode
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+.\#*
+
+# -----------------------------------------------------------------------------
+# SISTEMA OPERATIVO
+# -----------------------------------------------------------------------------
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+# -----------------------------------------------------------------------------
+# BASES DE DATOS
+# -----------------------------------------------------------------------------
+*.db
+*.sqlite
+*.sqlite3
+
+# MongoDB
+dump/
+
+# -----------------------------------------------------------------------------
+# VECTOR STORES
+# -----------------------------------------------------------------------------
+# Qdrant
+qdrant_storage/
+.qdrant/
+
+# Pinecone
+.pinecone/
+
+# Weaviate
+.weaviate/
+
+# -----------------------------------------------------------------------------
+# MODELOS Y EMBEDDINGS
+# -----------------------------------------------------------------------------
+models/
+*.bin
+*.onnx
+*.h5
+*.pkl
+*.joblib
+
+# Hugging Face cache
+.cache/
+huggingface/
+
+# -----------------------------------------------------------------------------
+# DOCUMENTACIÓN GENERADA
+# -----------------------------------------------------------------------------
+docs/_build/
+site/
+
+# -----------------------------------------------------------------------------
+# OTROS
+# -----------------------------------------------------------------------------
+# Backups
+*.bak
+*.backup
+*.old
+
+# Compressed files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Large files
+*.pdf
+*.docx
+*.xlsx
+*.pptx
+
+# Excepciones: archivos de ejemplo pequeños
+!examples/*.pdf
+!tests/fixtures/*.pdf

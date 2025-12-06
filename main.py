@@ -153,6 +153,10 @@ class IngestionSystemTester:
             
             logger.info(f"📄 PDFs encontrados: {len(pdf_files)}")
             
+            # Asegurar que existe el directorio de salida
+            markdown_dir = Path(config.MARKDOWN_OUTPUT_DIR)
+            markdown_dir.mkdir(parents=True, exist_ok=True)
+            
             # Convertir primer PDF como prueba
             test_pdf = pdf_files[0]
             logger.info(f"🔄 Convirtiendo: {test_pdf.name}")
@@ -163,6 +167,11 @@ class IngestionSystemTester:
             logger.info(f"  - Caracteres: {len(markdown_text):,}")
             logger.info(f"  - Palabras: ~{len(markdown_text.split()):,}")
             logger.info(f"  - Preview: {markdown_text[:200]}...")
+            
+            # GUARDAR EL MARKDOWN A DISCO
+            output_file = markdown_dir / f"{test_pdf.stem}.md"
+            output_file.write_text(markdown_text, encoding='utf-8')
+            logger.info(f"💾 Markdown guardado en: {output_file}")
             
             self._record_test_pass("PDF Conversion")
             return True
@@ -360,6 +369,54 @@ class IngestionSystemTester:
             self._record_test_fail("DocStore Operations", str(e))
             return False
     
+    def test_08_batch_pdf_conversion(self):
+        """TEST 08: Batch PDF Conversion"""
+        logger.info("\n" + "="*80)
+        logger.info("TEST 08: BATCH PDF CONVERSION")
+        logger.info("="*80)
+        
+        try:
+            converter = self.components['converter']
+            
+            # Buscar PDFs
+            pdf_dir = Path(config.RAW_DATA_DIR)
+            pdf_files = list(pdf_dir.glob("**/*.pdf"))
+            
+            if not pdf_files:
+                logger.warning("⚠️  No se encontraron PDFs para convertir")
+                logger.info("💡 Añade PDFs a: data/raw/")
+                self._record_test_pass("Batch PDF Conversion (skip - no files)")
+                return True
+            
+            logger.info(f"📂 PDFs encontrados: {len(pdf_files)}")
+            logger.info(f"🔄 Convirtiendo TODOS los PDFs a Markdown...")
+            
+            # Conversión en batch
+            results = converter.convert_directory(
+                input_dir=config.RAW_DATA_DIR,
+                output_dir=config.MARKDOWN_OUTPUT_DIR,
+                add_metadata=True
+            )
+            
+            logger.info(f"✅ Conversión batch completada:")
+            logger.info(f"  - Total PDFs: {len(pdf_files)}")
+            logger.info(f"  - Convertidos: {len(results)}")
+            logger.info(f"  - Tasa de éxito: {len(results)/len(pdf_files)*100:.1f}%")
+            
+            # Listar archivos generados
+            logger.info(f"\n📄 Archivos Markdown generados:")
+            for pdf_name, md_path in results.items():
+                md_file = Path(md_path)
+                size_kb = md_file.stat().st_size / 1024
+                logger.info(f"  ✓ {pdf_name} → {md_file.name} ({size_kb:.1f} KB)")
+            
+            self._record_test_pass("Batch PDF Conversion")
+            return True
+            
+        except Exception as e:
+            self._record_test_fail("Batch PDF Conversion", str(e))
+            return False
+    
     def test_07_complete_pipeline(self):
         """TEST 07: Complete Pipeline Integration"""
         logger.info("\n" + "="*80)
@@ -487,13 +544,15 @@ def interactive_menu(tester: IngestionSystemTester):
         print("\nOpciones disponibles:")
         print("  1. Ejecutar TODOS los tests")
         print("  2. Test 01: Document Loader")
-        print("  3. Test 02: PDF Conversion")
+        print("  3. Test 02: PDF Conversion (single)")
         print("  4. Test 03: Text Cleaning")
         print("  5. Test 04: Metadata Extraction")
         print("  6. Test 05: Document Validation")
         print("  7. Test 06: DocStore Operations")
         print("  8. Test 07: Complete Pipeline")
-        print("  9. Ver estadísticas DocStore")
+        print("  9. Test 08: Batch PDF Conversion (ALL PDFs)")
+        print(" 10. Ver estadísticas DocStore")
+        print(" 11. Ver archivos Markdown generados")
         print("  0. Salir")
         print()
         
@@ -508,6 +567,7 @@ def interactive_menu(tester: IngestionSystemTester):
             tester.test_05_document_validation()
             tester.test_06_docstore_operations()
             tester.test_07_complete_pipeline()
+            tester.test_08_batch_pdf_conversion()
             tester.print_final_report()
             
         elif choice == '2':
@@ -525,6 +585,8 @@ def interactive_menu(tester: IngestionSystemTester):
         elif choice == '8':
             tester.test_07_complete_pipeline()
         elif choice == '9':
+            tester.test_08_batch_pdf_conversion()
+        elif choice == '10':
             if tester.docstore:
                 stats = tester.docstore.get_statistics()
                 print("\n📊 ESTADÍSTICAS DOCSTORE:")
@@ -532,6 +594,23 @@ def interactive_menu(tester: IngestionSystemTester):
                     print(f"  • {key}: {value}")
             else:
                 print("⚠️  DocStore no inicializado")
+        elif choice == '11':
+            markdown_dir = Path(config.MARKDOWN_OUTPUT_DIR)
+            if markdown_dir.exists():
+                md_files = list(markdown_dir.glob("*.md"))
+                if md_files:
+                    print(f"\n📄 ARCHIVOS MARKDOWN GENERADOS ({len(md_files)}):")
+                    for md_file in sorted(md_files):
+                        size_kb = md_file.stat().st_size / 1024
+                        mod_time = datetime.fromtimestamp(md_file.stat().st_mtime)
+                        print(f"  ✓ {md_file.name}")
+                        print(f"    - Tamaño: {size_kb:.1f} KB")
+                        print(f"    - Modificado: {mod_time.strftime('%Y-%m-%d %H:%M:%S')}")
+                else:
+                    print("⚠️  No hay archivos Markdown generados")
+                    print(f"💡 Ejecuta la opción 9 para convertir PDFs")
+            else:
+                print(f"⚠️  Directorio no existe: {markdown_dir}")
         elif choice == '0':
             print("\n👋 Saliendo del sistema de pruebas...")
             break
