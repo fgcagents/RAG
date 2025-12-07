@@ -1,0 +1,109 @@
+# requirements_module2.txt
+# =============================================================================
+# Módulo 2: Document Processing & Indexing - Dependencias
+# =============================================================================
+
+# Core LlamaIndex (ya instalado en módulo 1)
+llama-index>=0.10.0
+llama-index-core>=0.10.0
+
+# =============================================================================
+# EMBEDDINGS
+# =============================================================================
+
+# OpenAI Embeddings
+llama-index-embeddings-openai>=0.1.0
+openai>=1.0.0
+
+# HuggingFace Embeddings
+llama-index-embeddings-huggingface>=0.2.0
+sentence-transformers>=2.2.0
+
+# PyTorch (CPU version - cambiar si tienes GPU)
+torch>=2.0.0
+# Para GPU: pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+
+# =============================================================================
+# VECTOR STORES
+# =============================================================================
+
+# Qdrant (Recomendado - Local + Cloud)
+llama-index-vector-stores-qdrant>=0.1.0
+qdrant-client>=1.7.0
+
+# ChromaDB (Alternativa ligera)
+llama-index-vector-stores-chroma>=0.1.0
+chromadb>=0.4.0
+
+# Pinecone (Cloud managed)
+llama-index-vector-stores-pinecone>=0.1.0
+pinecone-client>=3.0.0
+
+# FAISS (Alta velocidad, local)
+faiss-cpu>=1.7.4  # O faiss-gpu si tienes GPU
+
+# =============================================================================
+# NODE PARSERS
+# =============================================================================
+
+# Semantic Splitter
+nltk>=3.8.0
+spacy>=3.7.0
+
+# =============================================================================
+# UTILITIES
+# =============================================================================
+
+# Progress bars
+tqdm>=4.65.0
+
+# Async processing
+aiohttp>=3.9.0
+
+# =============================================================================
+# OPCIONAL - MODELOS LOCALES
+# =============================================================================
+
+# Para BGE models offline
+# transformers>=4.35.0
+
+# Para E5 models
+# InstructorEmbedding>=1.0.0
+
+# =============================================================================
+# TESTING
+# =============================================================================
+
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+pytest-cov>=4.1.0
+
+# =============================================================================
+# NOTAS DE INSTALACIÓN
+# =============================================================================
+
+# INSTALACIÓN BÁSICA (local, sin GPU):
+# pip install -r requirements_module2.txt
+
+# INSTALACIÓN CON GPU:
+# pip install torch torchvision --index-url https://download.pytorch.org/whl/cu118
+# pip install faiss-gpu
+# pip install -r requirements_module2.txt
+
+# INSTALACIÓN MÍNIMA (solo OpenAI + Qdrant):
+# pip install llama-index-embeddings-openai llama-index-vector-stores-qdrant qdrant-client openai
+
+# INSTALACIÓN COMPLETA (todos los backends):
+# pip install -r requirements_module2.txt
+
+# =============================================================================
+# MODELOS SPACY (si usas semantic chunking)
+# =============================================================================
+# python -m spacy download en_core_web_sm
+# python -m spacy download es_core_news_sm
+# python -m spacy download ca_core_news_sm  # Si existe
+
+# =============================================================================
+# VERIFICACIÓN POST-INSTALACIÓN
+# =============================================================================
+# python -c "import llama_index; import qdrant_client; import openai; print('OK')"

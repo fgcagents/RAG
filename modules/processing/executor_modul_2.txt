@@ -1,0 +1,11 @@
+# 1. Instal·lar dependències
+pip install -r modules/processing/module2_requirements.txt
+
+# 2. Afegir configuració al .env
+cat .env_module2_addition >> .env
+
+# 3. Executar setup
+python scripts/setup_module2.py
+
+# 4. Provar exemples
+python examples/module2_example.py

@@ -1,0 +1,124 @@
+# =============================================================================
+# AFEGIR AL FINAL DEL FITXER .env EXISTENT
+# =============================================================================
+
+# =============================================================================
+# MÓDULO 2: DOCUMENT PROCESSING & INDEXING
+# =============================================================================
+
+# -----------------------------------------------------------------------------
+# CHUNKING
+# -----------------------------------------------------------------------------
+# Estratègia: sentence, semantic, sentence_window, fixed_size, recursive
+PROCESSING_CHUNKING_STRATEGY=sentence
+PROCESSING_CHUNK_SIZE=512
+PROCESSING_CHUNK_OVERLAP=50
+
+# Semantic chunking
+PROCESSING_SEMANTIC_BUFFER_SIZE=1
+PROCESSING_SEMANTIC_THRESHOLD=95
+
+# Sentence window
+PROCESSING_SENTENCE_WINDOW_SIZE=3
+
+# -----------------------------------------------------------------------------
+# EMBEDDINGS
+# -----------------------------------------------------------------------------
+# Model: openai-small, openai-large, bge-large, bge-m3, e5-multilingual
+PROCESSING_EMBEDDING_MODEL=bge-m3
+PROCESSING_EMBEDDING_BATCH_SIZE=100
+PROCESSING_EMBEDDING_DIMENSIONS=1536
+
+# OpenAI (si uses models OpenAI)
+# PROCESSING_OPENAI_API_KEY=sk-your-key-here
+
+# HuggingFace (per models locals)
+# PROCESSING_HF_TOKEN=your-token
+PROCESSING_HF_CACHE_DIR=models/embeddings
+
+# -----------------------------------------------------------------------------
+# VECTOR STORE
+# -----------------------------------------------------------------------------
+# Backend: qdrant, chroma, pinecone, faiss
+PROCESSING_VECTOR_STORE_BACKEND=qdrant
+PROCESSING_VECTOR_STORE_PATH=data/vector_stores
+PROCESSING_COLLECTION_NAME=rag_documents
+
+# Qdrant (mode local per defecte)
+PROCESSING_QDRANT_HOST=localhost
+PROCESSING_QDRANT_PORT=6333
+
+# Qdrant Cloud (descomentar si uses cloud)
+# PROCESSING_QDRANT_URL=https://your-cluster.qdrant.io
+# PROCESSING_QDRANT_API_KEY=your-key
+
+# Pinecone (si uses Pinecone)
+# PROCESSING_PINECONE_API_KEY=your-key
+# PROCESSING_PINECONE_ENVIRONMENT=us-east-1-aws
+# PROCESSING_PINECONE_INDEX_NAME=rag-index
+
+# -----------------------------------------------------------------------------
+# INDEX BUILDER
+# -----------------------------------------------------------------------------
+PROCESSING_INDEX_PERSIST_DIR=data/indexes
+PROCESSING_INDEX_NAME=main_index
+
+# Retrieval
+PROCESSING_SIMILARITY_TOP_K=10
+PROCESSING_RETRIEVAL_MODE=default
+
+# -----------------------------------------------------------------------------
+# METADATA INDEX
+# -----------------------------------------------------------------------------
+PROCESSING_METADATA_INDEX_PATH=data/indexes/metadata
+PROCESSING_METADATA_FIELDS_TO_INDEX=filename,file_type,department,category,language
+
+# -----------------------------------------------------------------------------
+# HYBRID SEARCH
+# -----------------------------------------------------------------------------
+PROCESSING_ENABLE_HYBRID_SEARCH=true
+PROCESSING_HYBRID_ALPHA=0.5
+
+# -----------------------------------------------------------------------------
+# PERFORMANCE
+# -----------------------------------------------------------------------------
+PROCESSING_MAX_WORKERS_EMBEDDING=4
+PROCESSING_BATCH_SIZE_INDEXING=100
+PROCESSING_ENABLE_ASYNC_INDEXING=false
+
+# -----------------------------------------------------------------------------
+# QUALITY CONTROL
+# -----------------------------------------------------------------------------
+PROCESSING_MIN_CHUNK_LENGTH=50
+PROCESSING_MAX_CHUNK_LENGTH=2000
+PROCESSING_VALIDATE_EMBEDDINGS=true
+
+# -----------------------------------------------------------------------------
+# LOGGING
+# -----------------------------------------------------------------------------
+PROCESSING_LOG_LEVEL=INFO
+PROCESSING_LOG_FILE=logs/processing.log
+
+# -----------------------------------------------------------------------------
+# CONFIGURACIONS RECOMANADES SEGONS ENTORN
+# -----------------------------------------------------------------------------
+
+# DEVELOPMENT (local, sense API keys):
+# PROCESSING_EMBEDDING_MODEL=bge-m3
+# PROCESSING_VECTOR_STORE_BACKEND=chroma
+# PROCESSING_CHUNK_SIZE=256
+# PROCESSING_SIMILARITY_TOP_K=5
+
+# PRODUCTION (amb OpenAI):
+# PROCESSING_EMBEDDING_MODEL=openai-small
+# PROCESSING_VECTOR_STORE_BACKEND=qdrant
+# PROCESSING_CHUNK_SIZE=512
+# PROCESSING_SIMILARITY_TOP_K=10
+# PROCESSING_OPENAI_API_KEY=sk-...
+
+# PRODUCTION (sense OpenAI, multilingüe):
+# PROCESSING_EMBEDDING_MODEL=bge-m3
+# PROCESSING_VECTOR_STORE_BACKEND=qdrant
+# PROCESSING_CHUNK_SIZE=512
+# PROCESSING_QDRANT_URL=https://your-cluster.qdrant.io
+# PROCESSING_QDRANT_API_KEY=your-key
