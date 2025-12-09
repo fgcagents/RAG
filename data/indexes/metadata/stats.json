@@ -1,0 +1,33 @@
+{
+  "total_nodes": 296,
+  "indexed_fields": [
+    "size_mb",
+    "department",
+    "chunk_overlap",
+    "created_at",
+    "indexed_at",
+    "mime_type",
+    "chunk_id",
+    "file_hash",
+    "file_type",
+    "file_stem",
+    "file_extension",
+    "embedding_model",
+    "updated_at",
+    "project",
+    "size_bytes",
+    "text_length",
+    "chunk_strategy",
+    "chunk_size",
+    "line_count",
+    "stored_at",
+    "filename",
+    "modified_at",
+    "word_count",
+    "source",
+    "accessed_at",
+    "language",
+    "embedding_dimensions"
+  ],
+  "last_updated": "2025-12-07T18:50:20.506660"
+}

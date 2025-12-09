@@ -31,12 +31,12 @@ class ProcessingConfig(BaseSettings):
     # EMBEDDINGS
     # =================================================================
     # Modelo: openai-small, openai-large, bge-large, bge-m3, e5-multilingual, etc.
-    EMBEDDING_MODEL: str = "openai-small"
-    EMBEDDING_BATCH_SIZE: int = 100
-    EMBEDDING_DIMENSIONS: int = 1536  # Se ajusta automáticamente según modelo
+    # EMBEDDING_MODEL: str = "openai-small"
+    # EMBEDDING_BATCH_SIZE: int = 100
+    # EMBEDDING_DIMENSIONS: int = 1536  # Se ajusta automáticamente según modelo
     
     # OpenAI
-    OPENAI_API_KEY: Optional[str] = None
+    # OPENAI_API_KEY: Optional[str] = None
     
     # HuggingFace (para modelos locales)
     HF_TOKEN: Optional[str] = None
